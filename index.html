@@ -1,0 +1,2602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AadhaarScannerForLodges - 100% Legal Masked Aadhaar & Digital Guest Check-in for Indian Hotels</title>
+  <meta name="description" content="AadhaarScannerForLodges replaces illegal Aadhaar photocopies with instant QR scanning, masked Aadhaar extraction, built-in passport/driving license scanner, and WhatsApp sharesheet import. 100% compliant with Indian Govt regulations." />
+  <meta name="keywords" content="Aadhaar scanner for lodges, hotel guest check-in app, masked Aadhaar India, Sarais act compliance, Aadhaar QR code scanner, lodge guest register, paperless hotel check-in" />
+  <link rel="icon" type="image/png" href="AppLogo.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Root Design System Tokens */
+    :root {
+      --bg-dark: #070a13;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --bg-glass: rgba(15, 23, 42, 0.65);
+      --surface: #0f172a;
+      --surface-light: #1e293b;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(56, 189, 248, 0.3);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #0284c7;
+      --primary-light: #38bdf8;
+      --cyan-glow: #00f0ff;
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.2);
+      --crimson: #ef4444;
+      --crimson-glow: rgba(239, 68, 68, 0.18);
+      --amber: #f59e0b;
+      --gradient-primary: linear-gradient(135deg, #0284c7 0%, #00f0ff 100%);
+      --gradient-accent: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+      --gradient-fire: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+      --gradient-emerald: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --shadow-card: 0 16px 36px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-subtle);
+      --shadow-glow: 0 0 40px -10px rgba(56, 189, 248, 0.35);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      --nav-blur: blur(20px);
+    }
+
+    [data-theme="light"] {
+      --bg-dark: #f8fafc;
+      --bg-card: rgba(255, 255, 255, 0.88);
+      --bg-card-hover: #ffffff;
+      --bg-glass: rgba(255, 255, 255, 0.75);
+      --surface: #ffffff;
+      --surface-light: #f1f5f9;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-glow: rgba(2, 132, 199, 0.35);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --primary: #0284c7;
+      --primary-light: #0369a1;
+      --cyan-glow: #0284c7;
+      --shadow-card: 0 14px 30px -6px rgba(15, 23, 42, 0.08), 0 0 0 1px var(--border-subtle);
+      --shadow-glow: 0 0 35px -8px rgba(2, 132, 199, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.65;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+    }
+
+    /* Ambient Lighting Mesh */
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .mesh-glow-1 {
+      position: absolute;
+      top: -150px;
+      left: 20%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 65%);
+      filter: blur(80px);
+    }
+
+    .mesh-glow-2 {
+      position: absolute;
+      top: 40%;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 65%);
+      filter: blur(90px);
+    }
+
+    .mesh-glow-3 {
+      position: absolute;
+      bottom: -100px;
+      left: 10%;
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(129, 140, 248, 0.09) 0%, transparent 65%);
+      filter: blur(85px);
+    }
+
+    /* Navigation */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--bg-glass);
+      backdrop-filter: var(--nav-blur);
+      -webkit-backdrop-filter: var(--nav-blur);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.85rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .nav-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      object-fit: cover;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-brand:hover .nav-logo {
+      transform: scale(1.05) rotate(-2deg);
+    }
+
+    .nav-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .brand-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-light);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .theme-toggle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--surface);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-1px);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.35rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: #050b14;
+      font-weight: 700;
+      box-shadow: 0 4px 18px rgba(0, 240, 255, 0.35);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 8px 26px rgba(0, 240, 255, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--border-glow);
+      background: var(--bg-card-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-sm {
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.75rem;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      padding: 4.5rem 0 3.5rem;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .hero-content {
+      position: relative;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.95rem;
+      border-radius: var(--radius-full);
+      background: rgba(2, 132, 199, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--primary-light);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan-glow);
+      box-shadow: 0 0 10px var(--cyan-glow);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.4rem;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.35rem;
+    }
+
+    .hero-title span.highlight-danger {
+      background: var(--gradient-fire);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .hero-title span.highlight-cyan {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .hero-desc {
+      font-size: 1.18rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      max-width: 620px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Hero Interactive Graphic Card */
+    .hero-visual-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+      overflow: hidden;
+      padding: 1.25rem;
+    }
+
+    .hero-img-wrap {
+      position: relative;
+      border-radius: calc(var(--radius-lg) - 8px);
+      overflow: hidden;
+      aspect-ratio: 16/10;
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .hero-visual-card:hover .hero-img {
+      transform: scale(1.03);
+    }
+
+    /* Overlay Floating Scanner UI */
+    .scanner-overlay-hud {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(7, 10, 19, 0.2) 0%, rgba(7, 10, 19, 0.85) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem;
+      pointer-events: none;
+    }
+
+    .hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .live-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.65rem;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+
+    .laser-line {
+      position: absolute;
+      top: 30%;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: #00f0ff;
+      box-shadow: 0 0 15px 3px #00f0ff, 0 0 30px 6px rgba(0, 240, 255, 0.5);
+      animation: scanLaser 3s ease-in-out infinite;
+    }
+
+    @keyframes scanLaser {
+      0%, 100% { top: 25%; opacity: 0.8; }
+      50% { top: 70%; opacity: 1; }
+    }
+
+    .hud-card-result {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hud-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .hud-info {
+      flex: 1;
+    }
+
+    .hud-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hud-masked-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #38bdf8;
+      letter-spacing: 0.05em;
+      margin-top: 0.15rem;
+    }
+
+    .hud-time {
+      font-size: 0.75rem;
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* Section Styling */
+    .section {
+      padding: 5rem 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary-light);
+      margin-bottom: 0.65rem;
+    }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* Urgent Regulatory Law / Xerox Ban Section */
+    .alert-banner {
+      background: radial-gradient(circle at top, rgba(239, 68, 68, 0.15) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 16px 36px -10px var(--crimson-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .alert-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-fire);
+    }
+
+    .alert-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .alert-icon-box {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-md);
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--crimson);
+      flex-shrink: 0;
+    }
+
+    .alert-content h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #fca5a5;
+      margin-bottom: 0.75rem;
+    }
+
+    .alert-content p {
+      color: var(--text-muted);
+      font-size: 1.02rem;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .alert-bullets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0.85rem;
+      margin-top: 1.25rem;
+    }
+
+    .alert-bullet-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .alert-bullet-item svg {
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+      color: var(--crimson);
+    }
+
+    /* Comparison Cards (Old Xerox vs Masked Scanner) */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .compare-card {
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+
+    .compare-card.bad {
+      background: rgba(30, 20, 25, 0.65);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .compare-card.good {
+      background: rgba(16, 32, 28, 0.65);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      box-shadow: 0 16px 36px -10px var(--emerald-glow);
+    }
+
+    .compare-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+    }
+
+    .compare-tag.bad {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .compare-tag.good {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .compare-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .compare-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .compare-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .compare-list li strong {
+      color: var(--text-main);
+    }
+
+    .compare-icon {
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+
+    /* UIDAI New Aadhaar App vs DigiLocker Section */
+    .uidai-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+
+    .uidai-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .uidai-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .aadhaar-official-logo {
+      height: 48px;
+      object-fit: contain;
+      background: #ffffff;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .notice-chip-red {
+      padding: 0.35rem 0.85rem;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+    }
+
+    .pro-tip-card {
+      background: rgba(2, 132, 199, 0.08);
+      border: 1px dashed rgba(56, 189, 248, 0.4);
+      border-radius: var(--radius-md);
+      padding: 1.35rem;
+      margin-top: 1.5rem;
+    }
+
+    .pro-tip-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .pro-tip-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Features Grid (6 Powerful Highlights) */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-card);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-glow);
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+      background: var(--bg-card-hover);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.65rem;
+      margin-bottom: 1.35rem;
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .icon-cyan { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); background: rgba(56, 189, 248, 0.1); }
+    .icon-green { color: #34d399; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.1); }
+    .icon-purple { color: #a78bfa; border-color: rgba(167, 139, 250, 0.3); background: rgba(167, 139, 250, 0.1); }
+    .icon-amber { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.1); }
+    .icon-pink { color: #f472b6; border-color: rgba(244, 114, 182, 0.3); background: rgba(244, 114, 182, 0.1); }
+    .icon-emerald { color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.1); }
+
+    .feature-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+      color: var(--text-main);
+    }
+
+    .feature-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Interactive Live Demonstration Simulator */
+    .simulator-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .simulator-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .sim-tab-btn {
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-full);
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sim-tab-btn:hover {
+      color: var(--text-main);
+      border-color: var(--border-glow);
+    }
+
+    .sim-tab-btn.active {
+      background: var(--gradient-primary);
+      color: #070a13;
+      font-weight: 700;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(0, 240, 255, 0.35);
+    }
+
+    .sim-content-pane {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .sim-content-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Scanner Tab Content */
+    .demo-scanner-view {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .phone-mockup {
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto;
+      border-radius: 36px;
+      background: #0b0f19;
+      border: 8px solid #1e293b;
+      padding: 1.25rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .phone-camera-notch {
+      width: 80px;
+      height: 18px;
+      background: #1e293b;
+      border-radius: 0 0 12px 12px;
+      margin: -1.25rem auto 1rem;
+    }
+
+    .phone-reticle {
+      border: 2px dashed #00f0ff;
+      border-radius: 16px;
+      height: 220px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, transparent 70%);
+      overflow: hidden;
+    }
+
+    .reticle-laser {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: #00f0ff;
+      box-shadow: 0 0 12px 2px #00f0ff;
+      animation: scanLaserReticle 2.5s infinite ease-in-out;
+    }
+
+    @keyframes scanLaserReticle {
+      0%, 100% { top: 15%; }
+      50% { top: 85%; }
+    }
+
+    .qr-sample {
+      font-size: 4rem;
+      opacity: 0.85;
+    }
+
+    .extracted-card {
+      background: var(--surface);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .extracted-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .verified-seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: #34d399;
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .card-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .field-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+    }
+
+    .field-row span.label {
+      color: var(--text-dim);
+    }
+
+    .field-row span.val {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .masked-highlight {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      margin: 0.5rem 0;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* WhatsApp Simulator */
+    .whatsapp-sim-card {
+      background: #0c1a17;
+      border: 1px solid #134e4a;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .wa-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .wa-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #059669;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+    }
+
+    .wa-bubble {
+      background: #064e3b;
+      padding: 1rem;
+      border-radius: 12px 12px 0 12px;
+      max-width: 85%;
+      margin-left: auto;
+      margin-bottom: 1.5rem;
+      color: white;
+      font-size: 0.92rem;
+    }
+
+    .wa-action-box {
+      background: var(--surface);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Search Simulator */
+    .search-sim-container {
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .search-input-group {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.95rem 1.25rem 0.95rem 3rem;
+      border-radius: var(--radius-full);
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+
+    .search-icon-pos {
+      position: absolute;
+      top: 50%;
+      left: 1.15rem;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-chip {
+      padding: 0.35rem 0.85rem;
+      border-radius: var(--radius-full);
+      background: var(--surface-light);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-chip:hover, .filter-chip.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--primary-light);
+      color: var(--primary-light);
+    }
+
+    .search-result-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      font-size: 0.9rem;
+    }
+
+    .search-result-table th {
+      background: var(--surface);
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .search-result-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    .search-result-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .search-result-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* ROI & Paper Savings Calculator */
+    .calculator-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .slider-group {
+      margin-bottom: 1.75rem;
+    }
+
+    .slider-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.65rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .slider-val-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .calc-slider {
+      width: 100%;
+      height: 8px;
+      border-radius: var(--radius-full);
+      background: var(--surface-light);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .calc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--cyan-glow);
+      box-shadow: 0 0 10px var(--cyan-glow);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .calc-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .calc-results-card {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-md);
+      padding: 2.25rem;
+      text-align: center;
+    }
+
+    .result-huge-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: #34d399;
+      line-height: 1.1;
+      margin: 0.5rem 0 0.25rem;
+    }
+
+    .result-sub {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+    }
+
+    .metrics-mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      text-align: left;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .metric-lbl {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Compliance Shield Grid */
+    .compliance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .compliance-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .comp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-full);
+      margin-bottom: 0.85rem;
+    }
+
+    .comp-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .comp-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* FAQ Accordion */
+    .faq-container {
+      max-width: 820px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .faq-item:hover {
+      border-color: var(--border-glow);
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 1.35rem 1.75rem;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .faq-chevron {
+      transition: transform 0.3s ease;
+      color: var(--primary-light);
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .faq-chevron {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+      padding: 0 1.75rem;
+      color: var(--text-muted);
+      font-size: 0.96rem;
+      line-height: 1.75;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 400px;
+      padding: 0 1.75rem 1.5rem;
+    }
+
+    /* Final CTA Banner */
+    .cta-banner {
+      background: radial-gradient(circle at center, rgba(2, 132, 199, 0.25) 0%, rgba(15, 23, 42, 0.95) 100%);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 4.5rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.15rem;
+    }
+
+    .cta-desc {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 2.25rem;
+      line-height: 1.7;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .google-play-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 1.75rem;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-md);
+      color: #ffffff;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .google-play-badge:hover {
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(56, 189, 248, 0.25);
+    }
+
+    .play-text-top {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      display: block;
+    }
+
+    .play-text-bottom {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: block;
+      line-height: 1.1;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 3.5rem 0 2rem;
+      background: var(--surface);
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-brand h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 0.65rem;
+    }
+
+    .footer-col h5 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.15rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .footer-col a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-col a:hover {
+      color: var(--primary-light);
+    }
+
+    .footer-bottom {
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .calc-grid, .uidai-grid, .compare-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+      .demo-scanner-view {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .hero-title {
+        font-size: 2.4rem;
+      }
+      .hero-stats-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .calculator-box, .uidai-box, .alert-banner {
+        padding: 1.75rem;
+      }
+      .cta-title {
+        font-size: 2.1rem;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Ambient Glow Effects -->
+  <div class="bg-mesh">
+    <div class="mesh-glow-1"></div>
+    <div class="mesh-glow-2"></div>
+    <div class="mesh-glow-3"></div>
+  </div>
+
+  <!-- Top Sticky Navbar -->
+  <nav class="navbar" id="mainNav">
+    <div class="nav-container">
+      <a href="#" class="nav-brand" aria-label="AadhaarScannerForLodges Home">
+        <img src="AppLogo.png" alt="AadhaarScannerForLodges App Logo" class="nav-logo" />
+        <div class="nav-brand-text">
+          <span class="brand-title">AadhaarScannerForLodges</span>
+          <span class="brand-tag">Govt Compliant Guest Check-In</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#why-banned" class="nav-link">Xerox Ban</a></li>
+        <li><a href="#uidai-notice" class="nav-link">UIDAI Notice</a></li>
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#demo" class="nav-link">Interactive Demo</a></li>
+        <li><a href="#roi-calc" class="nav-link">Cost Calculator</a></li>
+        <li><a href="#compliance" class="nav-link">Compliance</a></li>
+        <li><a href="#faq" class="nav-link">FAQ</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Theme" title="Switch Light/Dark Mode">
+          <svg id="moonIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg id="sunIcon" style="display:none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+        <a href="#download" class="btn btn-primary btn-sm">Get App</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Left Hero Copy -->
+        <div class="hero-content">
+          <div class="badge-pill">
+            <span class="badge-dot"></span>
+            Govt of India Compliance Mandate Ready
+          </div>
+          <h1 class="hero-title">
+            Aadhaar Xerox is <span class="highlight-danger">Banned.</span><br />
+            Switch to <span class="highlight-cyan">Masked Aadhaar</span> in 2 Seconds.
+          </h1>
+          <p class="hero-desc">
+            <strong>AadhaarScannerForLodges</strong> scans original Aadhaar card QR codes, extracts the legally required <strong>Masked Aadhaar</strong> (<code>XXXX-XXXX-XXXX-1234</code>), decodes the high-res guest portrait photo, and replaces physical photocopies forever.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#download" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download on Google Play
+            </a>
+            <a href="#demo" class="btn btn-outline">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Try Interactive Demo
+            </a>
+          </div>
+
+          <div class="hero-stats-row">
+            <div class="stat-box">
+              <span class="stat-number">₹45K+</span>
+              <span class="stat-label">Saved/Yr in Paper</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number">2.1s</span>
+              <span class="stat-label">Avg Check-in Time</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number">100%</span>
+              <span class="stat-label">UIDAI Compliant</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number">0 kB</span>
+              <span class="stat-label">Cloud Leakage (Offline)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Interactive Graphic Card -->
+        <div class="hero-visual-card">
+          <div class="hero-img-wrap">
+            <img src="images/hero_hotel_scanner.jpg" alt="AadhaarScannerForLodges in Luxury Indian Hotel Reception" class="hero-img" />
+            <div class="scanner-overlay-hud">
+              <div class="hud-header">
+                <span class="live-chip">
+                  <span class="badge-dot" style="background:#34d399; box-shadow:0 0 8px #34d399;"></span>
+                  LIVE SCANNER ENGAGED
+                </span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:#38bdf8;">UIDAI v2.0 READY</span>
+              </div>
+
+              <!-- Animated Laser Scanning Line -->
+              <div class="laser-line"></div>
+
+              <!-- Extracted Result Card HUD -->
+              <div class="hud-card-result">
+                <div class="hud-avatar">👤</div>
+                <div class="hud-info">
+                  <div class="hud-name">
+                    RAJESH KUMAR
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="#34d399"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.8 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                  </div>
+                  <div class="hud-masked-id">XXXX-XXXX-XXXX-9842</div>
+                </div>
+                <div class="hud-time">1.8s Verified</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Urgent Regulatory Law / Xerox Ban Section -->
+  <section class="section" id="why-banned" style="padding-top: 1rem;">
+    <div class="container">
+      <div class="alert-banner">
+        <div class="alert-grid">
+          <div class="alert-icon-box">⚠️</div>
+          <div class="alert-content">
+            <h3>Govt of India & UIDAI Warning: Physical Photocopies (Xerox) Are Banned</h3>
+            <p>
+              Under current UIDAI circulars and the Digital Personal Data Protection (DPDP) Act, <strong>commercial lodges and hotels are strictly prohibited from retaining unmasked physical photocopies of Aadhaar cards</strong>. Storing unmasked 12-digit Aadhaar xerox copies creates severe regulatory and criminal liabilities for hoteliers.
+            </p>
+            <p style="margin-bottom: 0;">
+              Government guidelines explicitly mandate that <strong>only Masked Aadhaar (where the first 8 digits are completely redacted)</strong> may be accepted and stored digitally by lodging operators.
+            </p>
+
+            <div class="alert-bullets">
+              <div class="alert-bullet-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>No Physical Xerox:</strong> Eliminates risky paper document storage.</span>
+              </div>
+              <div class="alert-bullet-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>Automatic Masking:</strong> Only the last 4 digits (<code>XXXX-XXXX-XXXX-1234</code>) are recorded.</span>
+              </div>
+              <div class="alert-bullet-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>100% Legal Defense:</strong> Protects lodge managers from hefty statutory fines.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side by Side Comparison -->
+      <div class="compare-grid">
+        <!-- Bad Old Way -->
+        <div class="compare-card bad">
+          <span class="compare-tag bad">❌ Outlawed & Risky Method</span>
+          <h4 class="compare-title">The Physical Xerox Method</h4>
+          <ul class="compare-list">
+            <li>
+              <span class="compare-icon" style="color:#f87171;">✕</span>
+              <span><strong>Exposes Unmasked 12 Digits:</strong> Direct violation of UIDAI regulations.</span>
+            </li>
+            <li>
+              <span class="compare-icon" style="color:#f87171;">✕</span>
+              <span><strong>Huge Operating Expense:</strong> Spends ₹35,000 to ₹70,000 every year on copier paper, toner, and binders.</span>
+            </li>
+            <li>
+              <span class="compare-icon" style="color:#f87171;">✕</span>
+              <span><strong>Space & Moisture Nightmare:</strong> Physical file boxes occupy entire rooms, rot in damp weather, and invite termites.</span>
+            </li>
+            <li>
+              <span class="compare-icon" style="color:#f87171;">✕</span>
+              <span><strong>Slow Police Audits:</strong> Takes hours or days to manually find a 3-year-old guest register sheet.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- The Good AadhaarScannerForLodges Way -->
+        <div class="compare-card good">
+          <span class="compare-tag good">⚡ 100% Compliant & Modern</span>
+          <h4 class="compare-title">The AadhaarScannerForLodges Way</h4>
+          <ul class="compare-list">
+            <li>
+              <span class="compare-icon" style="color:#34d399;">✓</span>
+              <span><strong>Strictly Masked Data:</strong> Automatically masks first 8 digits; 100% UIDAI legal.</span>
+            </li>
+            <li>
+              <span class="compare-icon" style="color:#34d399;">✓</span>
+              <span><strong>Zero Paper Costs:</strong> 100% digital guest registers. Saves thousands of rupees every single month.</span>
+            </li>
+            <li>
+              <span class="compare-icon" style="color:#34d399;">✓</span>
+              <span><strong>Clean Reception & Go Green:</strong> Eliminates filing cabinets, saves office space, and protects trees.</span>
+            </li>
+            <li>
+              <span class="compare-icon" style="color:#34d399;">✓</span>
+              <span><strong>2-Second Police Search:</strong> Search by guest name, room number, or phone and export official Form C / PDF in seconds.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UIDAI Official Notice: New Aadhaar App vs DigiLocker QR -->
+  <section class="section" id="uidai-notice" style="background: rgba(15, 23, 42, 0.4);">
+    <div class="container">
+      <div class="uidai-box">
+        <div class="uidai-grid">
+          <div>
+            <div class="uidai-badge-row">
+              <img src="aadhaarlogo.png" alt="UIDAI Aadhaar Official Logo" class="aadhaar-official-logo" />
+              <span class="notice-chip-red">Critical Notice for Hoteliers</span>
+            </div>
+            <h2 class="section-title" style="font-size: 2.1rem; margin-bottom: 1.15rem;">
+              DigiLocker QR is <span style="color:#f87171;">Not Valid</span> for Lodges.<br />
+              Use the New Official Aadhaar App.
+            </h2>
+            <p class="section-desc" style="font-size: 0.98rem; margin-bottom: 1rem;">
+              Many guests attempt to present DigiLocker QR codes at check-in. However, <strong>DigiLocker QR codes lack the cryptographic lodging verification payload</strong> required under Indian lodging guidelines.
+            </p>
+            <p class="section-desc" style="font-size: 0.98rem;">
+              To resolve this, UIDAI launched the brand-new <strong>official Aadhaar App</strong> with secure offline verification QR codes. <strong>AadhaarScannerForLodges is calibrated specifically to work flawlessly with the new UIDAI Aadhaar App!</strong>
+            </p>
+
+            <div class="pro-tip-card">
+              <div class="pro-tip-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                Pro Tip on Scanning Complex Aadhaar QR Codes
+              </div>
+              <p class="pro-tip-desc">
+                An Aadhaar QR Code is extremely dense: it embeds the guest's high-resolution portrait photograph (Keiji JP2 format), complete address, demographic fields, and UIDAI's 2048-bit digital signature. <strong>Ensure the guest's printed card is clean and unblurry, or ask them to display the QR on high screen brightness in the new Aadhaar App</strong> for instantaneous 1-second decoding.
+              </p>
+            </div>
+          </div>
+
+          <!-- Graphic Card illustrating New Aadhaar App compatibility -->
+          <div style="background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:2rem; box-shadow:var(--shadow-card);">
+            <h4 style="font-family:'Outfit',sans-serif; font-size:1.25rem; font-weight:700; margin-bottom:1.25rem; color:var(--text-main);">
+              QR Code Verification Matrix
+            </h4>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; border-radius:8px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3);">
+                <div>
+                  <div style="font-weight:700; color:#fca5a5;">DigiLocker App QR Code</div>
+                  <div style="font-size:0.8rem; color:var(--text-dim);">Lacks full lodge verification payload</div>
+                </div>
+                <span style="color:#ef4444; font-weight:800; font-size:0.85rem;">INVALID FOR LODGES</span>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; border-radius:8px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);">
+                <div>
+                  <div style="font-weight:700; color:#6ee7b7;">New Official UIDAI Aadhaar App</div>
+                  <div style="font-size:0.8rem; color:var(--text-dim);">Signed offline verification envelope</div>
+                </div>
+                <span style="color:#10b981; font-weight:800; font-size:0.85rem;">100% SUPPORTED ✓</span>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; border-radius:8px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);">
+                <div>
+                  <div style="font-weight:700; color:#6ee7b7;">Original Physical Aadhaar Card QR</div>
+                  <div style="font-size:0.8rem; color:var(--text-dim);">Original PVC / Letter unblurry print</div>
+                </div>
+                <span style="color:#10b981; font-weight:800; font-size:0.85rem;">100% SUPPORTED ✓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Features Matrix -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Comprehensive Lodge Check-in Suite</span>
+        <h2 class="section-title">Engineered Specifically for Indian Lodging Operations</h2>
+        <p class="section-desc">
+          Everything your reception desk needs to stay 100% compliant, save tens of thousands in paper, and register guests in seconds.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper icon-cyan">⚡</div>
+          <h3 class="feature-title">Aadhaar QR & Auto-Masking</h3>
+          <p class="feature-text">
+            Reads compressed UIDAI QR codes in 1 second. Instantly extracts verified Name, Date of Birth, Gender, Address, and decodes the embedded JP2 guest photo while automatically masking the first 8 digits.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper icon-green">📄</div>
+          <h3 class="feature-title">Built-In Document Scanner</h3>
+          <p class="feature-text">
+            Have guests with Passports, Driving Licenses, or Voter IDs? Our built-in ML Kit document scanner performs auto-edge detection, perspective correction, and multi-page capture for seamless Form C filings.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper icon-purple">💬</div>
+          <h3 class="feature-title">WhatsApp & Gallery ShareSheet</h3>
+          <p class="feature-text">
+            Guest sent their ID photo on WhatsApp? No need to print! Simply tap "Share" in WhatsApp or Gallery and choose <strong>AadhaarScannerForLodges</strong> to import the photo ID directly into check-in.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper icon-amber">🔍</div>
+          <h3 class="feature-title">Lightning Search Engine</h3>
+          <p class="feature-text">
+            Police or municipal inspection? Retrieve any check-in record from up to 7 years ago in 2 seconds. Search effortlessly by Guest Name, Room Number, Mobile Number, or Check-in Date range.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper icon-pink">☁️</div>
+          <h3 class="feature-title">Google Drive & Cloud Backups</h3>
+          <p class="feature-text">
+            Maintain complete data sovereignty. Export encrypted ZIP backup archives directly to your Google Drive, Dropbox, or external USB OTG thumb drive. Restore your entire database anytime with 1 tap.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper icon-emerald">🌿</div>
+          <h3 class="feature-title">Save Paper, Time & Space</h3>
+          <p class="feature-text">
+            Go 100% paperless. Free up hotel reception space from massive physical registers and heavy binders. Reduce guest check-in queues from 5 minutes down to under 20 seconds.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Live Demonstration Simulator -->
+  <section class="section" id="demo" style="background: rgba(15, 23, 42, 0.45);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Interactive Simulator</span>
+        <h2 class="section-title">See AadhaarScannerForLodges in Action</h2>
+        <p class="section-desc">
+          Click between modes below to preview how our scanner, WhatsApp pickup, and search engine operate in real hotel environments.
+        </p>
+      </div>
+
+      <div class="simulator-box">
+        <!-- Interactive Tabs -->
+        <div class="simulator-nav">
+          <button class="sim-tab-btn active" onclick="switchSimTab('tab-aadhaar', this)">
+            <span>📷</span> Aadhaar QR Scanner
+          </button>
+          <button class="sim-tab-btn" onclick="switchSimTab('tab-whatsapp', this)">
+            <span>💬</span> WhatsApp ShareSheet Pickup
+          </button>
+          <button class="sim-tab-btn" onclick="switchSimTab('tab-docscan', this)">
+            <span>📑</span> Passport & DL Scanner
+          </button>
+          <button class="sim-tab-btn" onclick="switchSimTab('tab-search', this)">
+            <span>🔍</span> 2-Second Record Search
+          </button>
+        </div>
+
+        <!-- Tab 1: Aadhaar Scanner -->
+        <div class="sim-content-pane active" id="tab-aadhaar">
+          <div class="demo-scanner-view">
+            <div class="phone-mockup">
+              <div class="phone-camera-notch"></div>
+              <div class="phone-reticle">
+                <div class="reticle-laser"></div>
+                <div class="qr-sample">🔲</div>
+                <span style="font-size:0.75rem; color:#38bdf8; font-weight:700; margin-top:0.5rem;">ALIGN AADHAAR QR</span>
+              </div>
+              <div style="text-align:center; margin-top:1rem; font-size:0.8rem; color:var(--text-dim);">
+                Keiji JP2 Decompression Active &bull; Offline
+              </div>
+            </div>
+
+            <div class="extracted-card">
+              <div class="extracted-header">
+                <div>
+                  <h4 style="font-family:'Outfit',sans-serif; font-size:1.15rem; font-weight:700; color:var(--text-main);">
+                    Decoded Scanned Record
+                  </h4>
+                  <span style="font-size:0.78rem; color:var(--text-dim);">UIDAI Digital Signature Verified</span>
+                </div>
+                <span class="verified-seal">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#34d399"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.8 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                  VALID QR
+                </span>
+              </div>
+
+              <div class="card-fields">
+                <div class="field-row">
+                  <span class="label">Guest Name:</span>
+                  <span class="val">VIKRAM CHOUDHARY</span>
+                </div>
+                <div class="field-row">
+                  <span class="label">Date of Birth:</span>
+                  <span class="val">14/08/1988</span>
+                </div>
+                <div class="field-row">
+                  <span class="label">Gender:</span>
+                  <span class="val">MALE</span>
+                </div>
+                <div class="field-row">
+                  <span class="label">Masked Aadhaar:</span>
+                  <span class="val" style="color:#38bdf8; font-family:'JetBrains Mono',monospace;">XXXX-XXXX-XXXX-4589</span>
+                </div>
+                <div class="masked-highlight">
+                  XXXX &bull; XXXX &bull; XXXX &bull; 4589
+                </div>
+                <div class="field-row">
+                  <span class="label">Decoded Photo:</span>
+                  <span class="val" style="color:#34d399;">High-Res Portrait Saved</span>
+                </div>
+                <div class="field-row">
+                  <span class="label">Check-in Status:</span>
+                  <span class="val" style="color:#38bdf8;">Room 204 Assigned</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: WhatsApp ShareSheet -->
+        <div class="sim-content-pane" id="tab-whatsapp">
+          <div class="whatsapp-sim-card">
+            <div class="wa-header">
+              <div class="wa-avatar">G</div>
+              <div>
+                <div style="font-weight:700; color:white;">Guest: Amit Sharma (Booking #892)</div>
+                <div style="font-size:0.75rem; color:#34d399;">online &bull; shared photo ID</div>
+              </div>
+            </div>
+
+            <div class="wa-bubble">
+              "Hi reception, here is my Passport and Aadhaar copy for check-in today."<br />
+              <div style="margin-top:0.5rem; background:rgba(0,0,0,0.2); padding:0.5rem; border-radius:6px; font-size:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+                <span>📎</span> <code>guest_id_photo.jpg</code> (1.4 MB)
+              </div>
+            </div>
+
+            <div class="wa-action-box">
+              <div>
+                <div style="font-weight:700; font-size:0.95rem; color:var(--text-main);">Android ShareSheet Triggered</div>
+                <div style="font-size:0.82rem; color:var(--text-dim);">Share directly into AadhaarScannerForLodges</div>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="alert('Photo imported into check-in queue instantly! No printing needed.')">
+                Pick Up ID
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Document Scanner -->
+        <div class="sim-content-pane" id="tab-docscan">
+          <div style="max-width: 650px; margin: 0 auto; text-align: center;">
+            <div style="background:var(--surface); border:1px solid var(--border-glow); border-radius:var(--radius-lg); padding:2rem; margin-bottom:1.5rem;">
+              <div style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.3rem 0.85rem; border-radius:var(--radius-full); background:rgba(16,185,129,0.15); color:#34d399; font-weight:700; font-size:0.8rem; margin-bottom:1rem;">
+                <span>📷</span> ML Kit Auto-Edge Cropping
+              </div>
+              <h4 style="font-family:'Outfit',sans-serif; font-size:1.35rem; font-weight:700; margin-bottom:0.75rem;">
+                Multi-Page Passport & Driving License Mode
+              </h4>
+              <p style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; margin-bottom:1.5rem;">
+                Foreign tourist or Indian guest without Aadhaar? Capture both sides of driving licenses or multi-page passports. Automatically removes shadows, enhances text sharpness, and generates ready-to-print Form C PDF reports.
+              </p>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div style="border:1px dashed var(--border-subtle); border-radius:8px; padding:1.25rem; background:rgba(0,0,0,0.2);">
+                  <div style="font-size:1.8rem; margin-bottom:0.35rem;">🛂</div>
+                  <div style="font-weight:700; font-size:0.9rem;">Passport Page 1 & Visa</div>
+                  <div style="font-size:0.75rem; color:#34d399;">FRRO Form C Compatible</div>
+                </div>
+                <div style="border:1px dashed var(--border-subtle); border-radius:8px; padding:1.25rem; background:rgba(0,0,0,0.2);">
+                  <div style="font-size:1.8rem; margin-bottom:0.35rem;">🪪</div>
+                  <div style="font-weight:700; font-size:0.9rem;">Driving License (Front/Back)</div>
+                  <div style="font-size:0.75rem; color:#34d399;">Auto High-Contrast Filter</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: 2-Second Search Simulator -->
+        <div class="sim-content-pane" id="tab-search">
+          <div class="search-sim-container">
+            <div class="search-input-group">
+              <span class="search-icon-pos">🔍</span>
+              <input type="text" id="demoSearchInput" class="search-input" placeholder="Type guest name, room number, or phone..." oninput="handleDemoSearch(this.value)" />
+            </div>
+
+            <div class="chips-row">
+              <span style="font-size:0.82rem; color:var(--text-dim); align-self:center;">Quick Filters:</span>
+              <span class="filter-chip" onclick="applyQuickFilter('Vikram')">Vikram</span>
+              <span class="filter-chip" onclick="applyQuickFilter('Room 301')">Room 301</span>
+              <span class="filter-chip" onclick="applyQuickFilter('Pooja')">Pooja Patel</span>
+              <span class="filter-chip" onclick="applyQuickFilter('Passport')">Passport</span>
+              <span class="filter-chip" onclick="applyQuickFilter('')">Show All</span>
+            </div>
+
+            <div style="overflow-x:auto;">
+              <table class="search-result-table">
+                <thead>
+                  <tr>
+                    <th>Guest Name</th>
+                    <th>Room</th>
+                    <th>ID Type</th>
+                    <th>Masked ID / No</th>
+                    <th>Check-in Date</th>
+                  </tr>
+                </thead>
+                <tbody id="demoTableBody">
+                  <tr>
+                    <td style="font-weight:600; color:var(--text-main);">Vikram Choudhary</td>
+                    <td>Room 204</td>
+                    <td><span style="color:#38bdf8;">Aadhaar QR</span></td>
+                    <td><code>XXXX-XXXX-4589</code></td>
+                    <td>20 Oct 2026</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600; color:var(--text-main);">Pooja Patel</td>
+                    <td>Room 301</td>
+                    <td><span style="color:#38bdf8;">Aadhaar QR</span></td>
+                    <td><code>XXXX-XXXX-9120</code></td>
+                    <td>19 Oct 2026</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600; color:var(--text-main);">David Miller</td>
+                    <td>Room 105</td>
+                    <td><span style="color:#a78bfa;">Passport (USA)</span></td>
+                    <td><code>PASS-***882</code></td>
+                    <td>18 Oct 2026</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600; color:var(--text-main);">Ananya Deshmukh</td>
+                    <td>Room 210</td>
+                    <td><span style="color:#34d399;">Driving License</span></td>
+                    <td><code>MH-04-***56</code></td>
+                    <td>15 Oct 2026</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="text-align:right; font-size:0.75rem; color:var(--text-dim); margin-top:0.75rem;">
+              Local SQLite Indexed Query &bull; Speed: 1.4ms
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive ROI & Paper Savings Calculator -->
+  <section class="section" id="roi-calc">
+    <div class="container">
+      <div class="calculator-box">
+        <div class="calc-grid">
+          <div>
+            <span class="section-eyebrow">Interactive Savings Calculator</span>
+            <h2 class="section-title" style="font-size:2.2rem; margin-bottom:1rem;">
+              Calculate How Much Your Lodge Will Save
+            </h2>
+            <p class="section-desc" style="font-size:0.98rem; margin-bottom:2rem;">
+              Adjust the sliders based on your lodge size and daily check-ins to see your exact yearly savings in stationery, copier toner, paper, and physical file storage.
+            </p>
+
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <span>Number of Lodge Rooms:</span>
+                <span class="slider-val-badge" id="roomsBadge">25 Rooms</span>
+              </div>
+              <input type="range" min="5" max="100" value="25" class="calc-slider" id="sliderRooms" oninput="calculateSavings()" />
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <span>Average Daily Guest Check-Ins:</span>
+                <span class="slider-val-badge" id="checkinsBadge">18 Guests/Day</span>
+              </div>
+              <input type="range" min="2" max="60" value="18" class="calc-slider" id="sliderCheckins" oninput="calculateSavings()" />
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <span>Cost per Physical Xerox + Filing:</span>
+                <span class="slider-val-badge" id="costBadge">₹6.00</span>
+              </div>
+              <input type="range" min="3" max="15" value="6" step="0.5" class="calc-slider" id="sliderCost" oninput="calculateSavings()" />
+            </div>
+          </div>
+
+          <!-- Dynamic Output Card -->
+          <div class="calc-results-card">
+            <span style="font-size:0.85rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--primary-light);">
+              Estimated Yearly Financial Savings
+            </span>
+            <div class="result-huge-number" id="yearlySavings">₹39,420</div>
+            <div class="result-sub">Direct money saved on photocopying, toner & files</div>
+
+            <div class="metrics-mini-grid">
+              <div class="metric-item">
+                <span class="metric-val" id="monthlySavings">₹3,285</span>
+                <span class="metric-lbl">Saved Every Month</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-val" id="sheetsSaved">6,570</span>
+                <span class="metric-lbl">Paper Sheets Saved</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-val" id="hoursSaved">164 Hrs</span>
+                <span class="metric-lbl">Reception Staff Time Freed</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-val" style="color:#10b981;">100%</span>
+                <span class="metric-lbl">Legal Masking Shield</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Legal Shield & Indian Statutory Compliance -->
+  <section class="section" id="compliance" style="background: rgba(15, 23, 42, 0.4);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Hotelier Legal Defense Shield</span>
+        <h2 class="section-title">Strict Adherence to Indian Statutes</h2>
+        <p class="section-desc">
+          Rest easy during municipal, tourism, or police audits. <strong>AadhaarScannerForLodges</strong> is engineered around federal and state legal mandates.
+        </p>
+      </div>
+
+      <div class="compliance-grid">
+        <div class="compliance-card">
+          <span class="comp-badge">UIDAI Regulations</span>
+          <h4 class="comp-title">Aadhaar Act 2016</h4>
+          <p class="comp-desc">
+            Enforces strict masking of the first 8 digits. Never stores raw 12-digit Aadhaar numbers, and avoids unmasked physical xerox exposure.
+          </p>
+        </div>
+
+        <div class="compliance-card">
+          <span class="comp-badge">7-Year Retention</span>
+          <h4 class="comp-title">The Sarais Act, 1867</h4>
+          <p class="comp-desc">
+            Hotels and sarais must maintain guest registers for 7 years. The app features built-in 7-year safety protection preventing accidental early deletion.
+          </p>
+        </div>
+
+        <div class="compliance-card">
+          <span class="comp-badge">State Police Regulations</span>
+          <h4 class="comp-title">Guest Register Mandates</h4>
+          <p class="comp-desc">
+            Instant 1-tap PDF generation for daily police station liaison visits, beat marshals, and local magistrate security audits.
+          </p>
+        </div>
+
+        <div class="compliance-card">
+          <span class="comp-badge">Foreigners Act, 1946</span>
+          <h4 class="comp-title">Bureau of Immigration Form C</h4>
+          <p class="comp-desc">
+            Multi-page camera scanner captures foreign tourist passports and visas with high clarity, matching Bureau of Immigration standards.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Frequently Asked Questions</span>
+        <h2 class="section-title">Answers for Hotel Owners & Managers</h2>
+        <p class="section-desc">
+          Everything you need to know about setting up, scanning, and maintaining your lodge's digital records.
+        </p>
+      </div>
+
+      <div class="faq-container">
+        <!-- FAQ 1 -->
+        <div class="faq-item active">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Why is DigiLocker QR not valid for lodge check-ins?</span>
+            <span class="faq-chevron">▼</span>
+          </button>
+          <div class="faq-answer">
+            DigiLocker QR codes lack the cryptographic offline verification envelope and signed biometric photo container mandated by UIDAI for commercial identity verification. UIDAI has launched the new official Aadhaar App specifically for offline verification, and AadhaarScannerForLodges is 100% compatible with it.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Why is an unblurry printed QR code necessary?</span>
+            <span class="faq-chevron">▼</span>
+          </button>
+          <div class="faq-answer">
+            An authentic Aadhaar QR code is an ultra-dense matrix: it encodes the guest's name, DOB, full address, cryptographic signature, and an embedded high-resolution portrait photograph (Keiji JP2 format). A crisp, uncreased, and unblurry printout or a bright phone screen allows the camera to decode all data instantaneously.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Is our guest data uploaded to your company's servers?</span>
+            <span class="faq-chevron">▼</span>
+          </button>
+          <div class="faq-answer">
+            No. We do not operate any cloud synchronization servers or external databases. 100% of your guest records, masked Aadhaar data, and photos remain strictly inside the internal sandboxed database on your lodge's Android device.
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>How does the WhatsApp ShareSheet pickup feature work?</span>
+            <span class="faq-chevron">▼</span>
+          </button>
+          <div class="faq-answer">
+            If a customer messages their photo ID on WhatsApp before arriving, your reception staff simply selects the photo in WhatsApp, taps "Share", and chooses AadhaarScannerForLodges from the Android ShareSheet. The ID is immediately added to the guest's check-in profile without needing to print anything.
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>How do we back up data to Google Drive or external drives?</span>
+            <span class="faq-chevron">▼</span>
+          </button>
+          <div class="faq-answer">
+            You can export complete, encrypted backup ZIP archives containing all database records and images using Android's Storage Access Framework (SAF). You can save this backup directly into your Google Drive account, Dropbox, or a physical USB OTG thumb drive.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Banner & Download -->
+  <section class="section" id="download" style="padding-top: 1rem;">
+    <div class="container">
+      <div class="cta-banner">
+        <h2 class="cta-title">Upgrade Your Lodge to 100% Legal Check-in Today</h2>
+        <p class="cta-desc">
+          Stop risking regulatory penalties with illegal Aadhaar photocopies. Start scanning masked Aadhaar, save tens of thousands in paper, and protect your lodge records.
+        </p>
+
+        <div class="cta-buttons">
+          <a href="https://play.google.com/store/apps" target="_blank" rel="noopener noreferrer" class="google-play-badge">
+            <svg width="28" height="28" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M3.6 1.8L13.8 12 3.6 22.2c-.4-.4-.6-1-.6-1.8V3.6c0-.8.2-1.4.6-1.8z"/>
+              <path fill="#FBBC04" d="M17.3 8.5L13.8 12l3.5 3.5 4.1-2.3c1.2-.7 1.2-1.8 0-2.5l-4.1-2.2z"/>
+              <path fill="#34A853" d="M3.6 22.2l10.2-10.2 3.5 3.5-11.8 6.6c-.7.4-1.4.3-1.9-.1z"/>
+              <path fill="#EA4335" d="M3.6 1.8c.5-.4 1.2-.5 1.9-.1l11.8 6.6-3.5 3.5L3.6 1.8z"/>
+            </svg>
+            <div style="text-align:left;">
+              <span class="play-text-top">GET IT ON</span>
+              <span class="play-text-bottom">Google Play</span>
+            </div>
+          </a>
+
+          <a href="privacy-policy.html" class="btn btn-outline" style="padding: 0.75rem 1.75rem; border-radius: var(--radius-md);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            View Privacy Policy
+          </a>
+        </div>
+
+        <div style="font-size:0.85rem; color:var(--text-dim); display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap;">
+          <span>✓ Google Play Integrity Attested</span>
+          <span>✓ 100% Offline Database</span>
+          <span>✓ Works with New UIDAI Aadhaar App</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+            <img src="AppLogo.png" alt="AadhaarScannerForLodges" style="width:36px; height:36px; border-radius:8px;" />
+            <h4 style="margin-bottom:0;">AadhaarScannerForLodges</h4>
+          </div>
+          <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.7; max-width:380px;">
+            The digital compliance and masked Aadhaar scanner engineered specifically for Indian lodges, hotels, guesthouses, and homestays.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Compliance & Links</h5>
+          <ul>
+            <li><a href="#why-banned">Xerox Ban Regulation</a></li>
+            <li><a href="#uidai-notice">UIDAI Aadhaar App Info</a></li>
+            <li><a href="#features">Document Scanner</a></li>
+            <li><a href="#roi-calc">Savings Calculator</a></li>
+            <li><a href="privacy-policy.html">Official Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Developer & Publisher</h5>
+          <ul>
+            <li><strong>Entity:</strong> Individual Developer</li>
+            <li><strong>Location:</strong> Thane, Maharashtra, India</li>
+            <li><strong>Email:</strong> <a href="mailto:novandigitallabs.dev@gmail.com">novandigitallabs.dev@gmail.com</a></li>
+            <li><strong>Status:</strong> Google Play Store v1.0 Production</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 <strong>AadhaarScannerForLodges</strong>. All rights reserved.
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-dim);">
+          Crafted with 100% privacy-first offline engineering for Indian Hoteliers.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    // Theme Toggle Functionality
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const moonIcon = document.getElementById('moonIcon');
+    const sunIcon = document.getElementById('sunIcon');
+    const body = document.body;
+
+    function applyTheme(theme) {
+      body.setAttribute('data-theme', theme);
+      if (theme === 'light') {
+        moonIcon.style.display = 'none';
+        sunIcon.style.display = 'block';
+      } else {
+        moonIcon.style.display = 'block';
+        sunIcon.style.display = 'none';
+      }
+      localStorage.setItem('landing_theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('landing_theme') || 'dark';
+    applyTheme(savedTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const current = body.getAttribute('data-theme');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Interactive Simulator Tab Switcher
+    function switchSimTab(tabId, btnElement) {
+      document.querySelectorAll('.sim-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.sim-content-pane').forEach(pane => pane.classList.remove('active'));
+
+      btnElement.classList.add('active');
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) {
+        targetPane.classList.add('active');
+      }
+    }
+
+    // Dynamic ROI Calculator
+    const sliderRooms = document.getElementById('sliderRooms');
+    const sliderCheckins = document.getElementById('sliderCheckins');
+    const sliderCost = document.getElementById('sliderCost');
+
+    const roomsBadge = document.getElementById('roomsBadge');
+    const checkinsBadge = document.getElementById('checkinsBadge');
+    const costBadge = document.getElementById('costBadge');
+
+    const yearlySavings = document.getElementById('yearlySavings');
+    const monthlySavings = document.getElementById('monthlySavings');
+    const sheetsSaved = document.getElementById('sheetsSaved');
+    const hoursSaved = document.getElementById('hoursSaved');
+
+    function calculateSavings() {
+      const rooms = parseInt(sliderRooms.value);
+      const checkins = parseInt(sliderCheckins.value);
+      const cost = parseFloat(sliderCost.value);
+
+      roomsBadge.textContent = rooms + " Rooms";
+      checkinsBadge.textContent = checkins + " Guests/Day";
+      costBadge.textContent = "₹" + cost.toFixed(2);
+
+      const dailySpend = checkins * cost;
+      const monthly = Math.round(dailySpend * 30.4);
+      const yearly = Math.round(dailySpend * 365);
+      const sheets = Math.round(checkins * 365);
+      const hours = Math.round((checkins * 365 * 2.5) / 60);
+
+      yearlySavings.textContent = "₹" + yearly.toLocaleString('en-IN');
+      monthlySavings.textContent = "₹" + monthly.toLocaleString('en-IN');
+      sheetsSaved.textContent = sheets.toLocaleString('en-IN');
+      hoursSaved.textContent = hours + " Hrs";
+    }
+
+    // Initialize Calculator on page load
+    calculateSavings();
+
+    // Demo Search Simulator
+    const demoRecords = [
+      { name: "Vikram Choudhary", room: "Room 204", type: "Aadhaar QR", id: "XXXX-XXXX-4589", date: "20 Oct 2026", color: "#38bdf8" },
+      { name: "Pooja Patel", room: "Room 301", type: "Aadhaar QR", id: "XXXX-XXXX-9120", date: "19 Oct 2026", color: "#38bdf8" },
+      { name: "David Miller", room: "Room 105", type: "Passport (USA)", id: "PASS-***882", date: "18 Oct 2026", color: "#a78bfa" },
+      { name: "Ananya Deshmukh", room: "Room 210", type: "Driving License", id: "MH-04-***56", date: "15 Oct 2026", color: "#34d399" },
+      { name: "Suresh Menon", room: "Room 102", type: "Aadhaar QR", id: "XXXX-XXXX-3341", date: "12 Oct 2026", color: "#38bdf8" },
+      { name: "Elena Rostova", room: "Room 304", type: "Passport (Russia)", id: "RU-***912", date: "10 Oct 2026", color: "#a78bfa" }
+    ];
+
+    function renderDemoTable(records) {
+      const tbody = document.getElementById('demoTableBody');
+      if (records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:var(--text-dim);">No guest records matching your search.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = records.map(r => `
+        <tr>
+          <td style="font-weight:600; color:var(--text-main);">${r.name}</td>
+          <td>${r.room}</td>
+          <td><span style="color:${r.color};">${r.type}</span></td>
+          <td><code>${r.id}</code></td>
+          <td>${r.date}</td>
+        </tr>
+      `).join('');
+    }
+
+    function handleDemoSearch(query) {
+      const q = query.toLowerCase().trim();
+      if (!q) {
+        renderDemoTable(demoRecords.slice(0, 4));
+        return;
+      }
+      const filtered = demoRecords.filter(r => 
+        r.name.toLowerCase().includes(q) ||
+        r.room.toLowerCase().includes(q) ||
+        r.type.toLowerCase().includes(q) ||
+        r.id.toLowerCase().includes(q) ||
+        r.date.toLowerCase().includes(q)
+      );
+      renderDemoTable(filtered);
+    }
+
+    function applyQuickFilter(val) {
+      const input = document.getElementById('demoSearchInput');
+      input.value = val;
+      handleDemoSearch(val);
+    }
+
+    // FAQ Accordion Toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const wasActive = item.classList.contains('active');
+      
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      
+      if (!wasActive) {
+        item.classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
